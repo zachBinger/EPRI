@@ -1,5 +1,5 @@
 ;import mesh
-/file read-mesh /groups/achilli/EPRI/batch_20/assets/mesh_9.msh
+/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch20/mesh_9.msh
 ;
 ;switch mode
 /switch-to-solution-mode yes

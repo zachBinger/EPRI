@@ -1,0 +1,25 @@
+# encoding: utf-8
+# 2019 R2
+SetScriptVersion(Version="20.1")
+template1 = GetTemplate(TemplateName="Mesh")
+system1 = template1.CreateSystem()
+
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.Edit()
+DSscript = open("/groups/achilli/EPRI/batch_18/meshGen/Parameterized.js", "r")
+
+DSscriptcommand=DSscript.read()
+DSscript.close()
+geometry1.SendCommand(Language='Javascript', Command = DSscriptcommand)
+geometry1.Exit()
+
+
+meshComponent1 = system1.GetComponent(Name="Mesh")
+meshComponent1.Refresh()
+mesh1 = system1.GetContainer(ComponentName="Mesh")
+mesh1.Edit()
+DSscript = open("/groups/achilli/EPRI/batch_18/meshGen/boundaryNaming3.js", "r")
+DSscriptcommand=DSscript.read()
+DSscript.close()
+mesh1.SendCommand(Language='Javascript', Command = DSscriptcommand)
+mesh1.Exit()
