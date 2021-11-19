@@ -1,0 +1,187 @@
+;import mesh
+/file read-mesh /groups/achilli/EPRI/batch_1/assets/mesh_0.msh
+;
+;switch mode
+/switch-to-solution-mode yes
+;
+;define materials
+/define materials copy fluid water-liquid
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create water-liquid water-35g yes constant 1024.9 no no yes constant 0.001077 no no no no
+/define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
+/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
+;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
+;
+;
+/surface plane-point-n-normal vPlane1 0.004141 0 0 1 0 0
+/surface plane-point-n-normal vPlane2 0.012423 0 0 1 0 0
+/surface plane-point-n-normal vPlane3 0.020706 0 0 1 0 0
+/surface plane-point-n-normal vPlane4 0.028988 0 0 1 0 0
+/surface plane-point-n-normal vPlane5 0.03727 0 0 1 0 0
+/surface plane-point-n-normal vPlane6 0.045552 0 0 1 0 0
+/surface plane-point-n-normal vPlane7 0.053835 0 0 1 0 0
+/surface plane-point-n-normal vPlane8 0.062117 0 0 1 0 0
+/surface plane-point-n-normal hPlane0 0 0.00002 0 0 1 0
+/surface plane-point-n-normal hPlane1 0 0.00004 0 0 1 0
+/surface plane-point-n-normal hPlane2 0 0.00006 0 0 1 0
+/surface plane-point-n-normal hPlane3 0 0.00008 0 0 1 0
+/surface plane-point-n-normal hPlane4 0 0.0001 0 0 1 0
+/surface plane-point-n-normal hPlane5 0 0.00012 0 0 1 0
+/surface plane-point-n-normal hPlane6 0 0.00014 0 0 1 0
+/surface plane-point-n-normal hPlane7 0 0.00016 0 0 1 0
+/surface plane-point-n-normal hPlane8 0 0.00018 0 0 1 0
+/surface plane-point-n-normal hPlane9 0 0.0002 0 0 1 0
+;
+;
+/define b-c fluid fluid yes water-di no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
+/define b-c velocity-inlet inlet no no yes yes no 0.05 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density1_005.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.15 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density1_015.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.25 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density1_025.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.35 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density1_035.srp
+;
+;
+;
+/define b-c fluid fluid yes water-35g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
+/define b-c velocity-inlet inlet no no yes yes no 0.05 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density2_005.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.15 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density2_015.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.25 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density2_025.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.35 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density2_035.srp
+;
+;
+;
+/define b-c fluid fluid yes water-70g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
+/define b-c velocity-inlet inlet no no yes yes no 0.05 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density3_005.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.15 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density3_015.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.25 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density3_025.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.35 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density3_035.srp
+;
+;
+;
+/define b-c fluid fluid yes water-120g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
+/define b-c velocity-inlet inlet no no yes yes no 0.05 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density4_005.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.15 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density4_015.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.25 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density4_025.srp
+;
+;
+;
+/define b-c velocity-inlet inlet no no yes yes no 0.35 no 0 , , , , ,
+;initialize
+/solve initialize initialize-flow yes
+;solve
+/solve iterate 300
+/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes /groups/achilli/EPRI/batch_1/data/pressure/mesh_0_density4_035.srp
+;
+;
+;
+/report/system/proc-stats
+/report system time-stats
+/parallel timer usage
+/exit yes

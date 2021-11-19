@@ -21,8 +21,6 @@ slurmPath = deployPath + '/slurmFiles/'
 reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
-print(localDir)
-
 df = pd.read_csv(reportPath+'progressReport.csv')
 paramDF = pd.read_csv(reportPath+'testParams200.csv')
 
@@ -127,7 +125,6 @@ def writeJouDirs(batch,m, df):
     my_file.close()
     
     shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(batch)+"/journalFiles/test"+str(m)+".jou")
-    # print(deployPath+"batch_"+str(batch)+"/journalFiles/test"+str(m)+".jou")
 
 
 
@@ -151,7 +148,8 @@ def makeBatch(batchNum):
 
 for i in range(2):
     makeBatch(i)
-    writeJouDirs(i,1, df)
+    for j in range(2):
+        writeJouDirs(i,j, df)
 
 # print(df.head())
 
