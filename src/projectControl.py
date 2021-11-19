@@ -31,9 +31,7 @@ def getUnitCellLen(a):
 angles = list(map(getUnitCellLen,paramDF['angle'].values))
 unitCellLens = 2*(paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
 
-def writeSlurmFiles(batch,m,batchSlurmPath):
-    shutil.copyfile(sourcePath+"allRun.sh", batchSlurmPath+"allRun.sh")
-
+def writeSlurmFiles(batch,m):
     str1 = "#SBATCH --job-name=binger_"
     str2_front = "fluent 3ddp -meshing -g -t28 -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
     str2_back = " > "+HPCDir+"batch_"+str(batch)+"/reports/"
@@ -49,7 +47,7 @@ def writeSlurmFiles(batch,m,batchSlurmPath):
     new_file_contents = "".join(string_list)
     my_file.write(new_file_contents)
     my_file.close()
-    shutil.copyfile(sourcePath+"fluentTest.slurm", batchSlurmPath+"fluentTest.slurm")
+    
 
 def addExp(b,m,d,v):
     batchNum = b
@@ -74,15 +72,11 @@ def addExp(b,m,d,v):
             stringList.append(';'+'\n')
             stringList.append(';'+'\n')
 
-    # print(stringList)
     return stringList     
 
 def writeJouDirs(batch,m, df):
-
-    # str1 = "/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch"+str(batch)+"/"
     str1 = "/file read-mesh "+HPCDir+"batch_"+str(batch)+"/assets/"
     str2 = "/surface plane-point-n-normal vPlane"
-    # str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 vPlane8 vPlane9 vPlane10 vPlane11 vPlane12 vPlane13 vPlane14 vPlane15 outlet , pressure yes "+hpcPath+"/pressureTestResults/batch"+str(batch)+"/"
     str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batch)+"/data/pressure/"
 
     denStrings = ['water-di', 'water-35g', 'water-70g', 'water-120g']
@@ -90,7 +84,6 @@ def writeJouDirs(batch,m, df):
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
     str5_back = ' no 0 , , , , ,'
-    # vel = ["005","015","025","035"]
 
     my_file = open(sourcePath+"test0.jou", "r")
     string_list = my_file.readlines()
@@ -113,7 +106,6 @@ def writeJouDirs(batch,m, df):
     
     string_list = string_list + newStrings
 
-    
     string_list.append('/report/system/proc-stats\n')
     string_list.append('/report system time-stats\n')
     string_list.append('/parallel timer usage\n')
@@ -124,10 +116,6 @@ def writeJouDirs(batch,m, df):
     my_file.write(new_file_contents)
     my_file.close()
     
-    shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(batch)+"/journalFiles/test"+str(m)+".jou")
-
-
-
 def makeBatch(batchNum):
     if "batch_"+str(batchNum) not in listdir(deployPath):
         batchPath = deployPath+"batch_"+str(batchNum) + '/'
@@ -142,41 +130,10 @@ def makeBatch(batchNum):
         os.mkdir(batchPath+'slurmFiles/')
         os.mkdir(batchPath+'reports/')
 
-        writeSlurmFiles(batchNum,1,batchPath+'slurmFiles/')
-
-
-
-for i in range(2):
-    makeBatch(i)
-    for j in range(2):
-        writeJouDirs(i,j, df)
-
-# print(df.head())
-
-# def getUnitCellLen(a):
-#     ang = math.cos(math.radians(a))
-#     return ang
-
-# angles = list(map(getUnitCellLen,paramDF['angle'].values))
-# unitCellLens = 2*(paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
-
-# def writeSlurmDirs(batch,m):
-#     if "batch"+str(batch) not in listdir(slurmPath):
-#         os.mkdir(testDirPath+"tests/slurmFiles/batch"+str(batch))
-#         shutil.copyfile(testDirPath+"allRun.sh", testDirPath+"tests/slurmFiles/batch"+str(batch)+"/allRun.sh")
-
-#     # str1 = "#SBATCH --job-name=bingerFluentTest_"
-#     # str2_front = "fluent 3ddp -meshing -g -t28 -i "+hpcPath+"/journalFiles/batch"+str(batch)
-#     # str2_back = " > "+hpcPath+"/outputFiles/batch"
-
-#     # my_file = open("/Users/zacharybinger/Desktop/testDir/fluentTest.slurm", "r")
-#     # string_list = my_file.readlines()
-#     # my_file.close()
-
-#     # string_list[1] = str1+"batch"+str(batch)+"_mesh"+str(m)+ "\n"
-#     # string_list[16] = str2_front+"/test"+str(m)+".jou" + str2_back + str(batch) + "/mesh" +str(m) + "\n"
-
-#     # my_file = open("/Users/zacharybinger/Desktop/testDir/fluentTest.slurm", "w")
-#     # new_file_contents = "".join(string_list)
-#     # my_file.write(new_file_contents)
-#     # my_file.close()
+for idx, bat in enumerate(df['Batch'].unique()):
+    makeBatch(bat)
+    for idx, mesh in enumerate(df.loc[(df['Batch'] == bat)]['Mesh #'].unique()):
+        writeJouDirs(bat,mesh, df)
+        writeSlurmFiles(bat,mesh)
+        shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(bat)+"/journalFiles/test"+str(mesh)+".jou")
+        shutil.copyfile(sourcePath+"fluentTest.slurm", deployPath+"batch_"+str(bat)+"/slurmFiles/fluentTest"+str(mesh)+".slurm")
