@@ -1,0 +1,38 @@
+;import mesh
+/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch20/mesh_9.msh
+;
+;switch mode
+/switch-to-solution-mode yes
+;
+;define materials
+/define materials copy fluid water-liquid
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create water-liquid water-35g yes constant 1024.9 no no yes constant 0.001077 no no no no
+/define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
+/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
+;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
+;
+;
+/surface plane-point-n-normal vPlane1 0.001566 0 0 1 0 0
+/surface plane-point-n-normal vPlane2 0.004697 0 0 1 0 0
+/surface plane-point-n-normal vPlane3 0.007828 0 0 1 0 0
+/surface plane-point-n-normal vPlane4 0.01096 0 0 1 0 0
+/surface plane-point-n-normal vPlane5 0.014091 0 0 1 0 0
+/surface plane-point-n-normal vPlane6 0.017222 0 0 1 0 0
+/surface plane-point-n-normal vPlane7 0.020354 0 0 1 0 0
+/surface plane-point-n-normal vPlane8 0.04188 0 0 1 0 0
+/surface plane-point-n-normal hPlane0 0 0.00002 0 0 1 0
+/surface plane-point-n-normal hPlane1 0 0.00004 0 0 1 0
+/surface plane-point-n-normal hPlane2 0 0.00006 0 0 1 0
+/surface plane-point-n-normal hPlane3 0 0.00008 0 0 1 0
+/surface plane-point-n-normal hPlane4 0 0.0001 0 0 1 0
+/surface plane-point-n-normal hPlane5 0 0.00012 0 0 1 0
+/surface plane-point-n-normal hPlane6 0 0.00014 0 0 1 0
+/surface plane-point-n-normal hPlane7 0 0.00016 0 0 1 0
+/surface plane-point-n-normal hPlane8 0 0.00018 0 0 1 0
+/surface plane-point-n-normal hPlane9 0 0.0002 0 0 1 0
+;
+;
+;
+;
+;
