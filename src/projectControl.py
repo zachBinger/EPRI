@@ -32,15 +32,23 @@ angles = list(map(getUnitCellLen,paramDF['angle'].values))
 unitCellLens = 2*(paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
 
 def writeSlurmFiles(batch,m):
+    cores = 4
+    hrs = 1
+    mem = cores*5
+
     str1 = "#SBATCH --job-name=binger_"
-    str2_front = "fluent 3ddp -meshing -g -t28 -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
+    str2_front = "fluent 3ddp -meshing -g -t"+str(cores)+" -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
     str2_back = " > "+HPCDir+"batch_"+str(batch)+"/reports/"
 
-    my_file = open("/Users/zacharybinger/Desktop/testDir/fluentTest.slurm", "r")
+    my_file = open(sourcePath+"fluentTest.slurm", "r")
     string_list = my_file.readlines()
     my_file.close()
 
     string_list[1] = str1+"batch_"+str(batch)+"_mesh_"+str(m)+ "\n"
+    string_list[2] = "#SBATCH --ntasks="+ str(cores)+ "\n"
+    string_list[3] = "#SBATCH --mem="+ str(mem)+ "gb\n"
+    string_list[5] = "#SBATCH --ntasks-per-node="+ str(cores)+ "\n"
+    string_list[6] = "#SBATCH --time="+str(hrs)+":00:00\n"
     string_list[16] = str2_front+"/test"+str(m)+".jou" + str2_back + "mesh_" +str(m)+ ".out" + "\n"
 
     my_file = open(sourcePath+"fluentTest.slurm", "w")
@@ -48,7 +56,6 @@ def writeSlurmFiles(batch,m):
     my_file.write(new_file_contents)
     my_file.close()
     
-
 def addExp(b,m,d,v):
     batchNum = b
     denStrings = ['water-di', 'water-35g', 'water-70g', 'water-120g']
