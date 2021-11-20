@@ -9,10 +9,6 @@ import pandas as pd
 
 HPCDir = '/groups/achilli/EPRI/'
 localDir = os.getcwd()
-# os.chdir(path)
-
-batch = 1
-
 deployPath = localDir + '/deploy/'
 dataPath = deployPath + '/data/'
 meshPath = deployPath + '/assets/'
@@ -24,7 +20,7 @@ sourcePath = localDir + '/src/'
 df = pd.read_csv(reportPath+'progressReport.csv')
 paramDF = pd.read_csv(reportPath+'testParams200.csv')
 paramsPerBatch = 10
-
+df['Batch'] = df['Batch']-1
 
 P1 = paramDF['D_1'].tolist()
 P2 = paramDF['D_subFrac'].tolist()
@@ -77,7 +73,7 @@ def writeSlurmFiles(batch,m):
 def addExp(b,m,d,v):
     batchNum = b
     denStrings = ['water-di', 'water-35g', 'water-70g', 'water-120g']
-    str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batch)+"/data/pressure/"
+    str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str4_front = '/define b-c fluid fluid yes '
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
@@ -100,8 +96,8 @@ def addExp(b,m,d,v):
     return stringList     
 
 def writeJouDirs(batch,m, df):
-    # str1 = "/file read-mesh "+HPCDir+"batch_"+str(batch)+"/assets/"
-    str1 = "/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch"+str(batch)+"/"
+    str1 = "/file read-mesh "+HPCDir+"batch_"+str(batch)+"/assets/"
+    # str1 = "/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch"+str(batch)+"/"
     str2 = "/surface plane-point-n-normal vPlane"
     
     my_file = open(sourcePath+"test0.jou", "r")
@@ -219,7 +215,7 @@ def writeJouFile(batch):
     my_file.close()
 
 # for idx, bat in enumerate(df['Batch'].unique()):
-for idx, bat in enumerate(range(19)):
+for idx, bat in enumerate(range(20)):
     makeBatch(bat)
     writeString(bat, '/Users/zacharybinger/EPRI/src/shellscript_source.sh', p)
     writeJouFile(bat)
@@ -227,9 +223,11 @@ for idx, bat in enumerate(range(19)):
     shutil.copyfile(sourcePath+"meshJournal.wbjn", deployPath+"batch_"+str(bat)+"/meshGen/meshJournal.wbjn")
     shutil.copyfile(sourcePath+"shellscript_source.sh", deployPath+"batch_"+str(bat)+"/meshGen/shellscript_source.sh")
     shutil.copyfile(sourcePath+"Parameterized.js", deployPath+"batch_"+str(bat)+"/meshGen/Parameterized.js")
+    shutil.copyfile(sourcePath+"boundaryNaming3.js", deployPath+"batch_"+str(bat)+"/meshGen/boundaryNaming3.js")
 
-    # for idx, mesh in enumerate(df.loc[(df['Batch'] == bat)]['Mesh #'].unique()):
-    #     writeJouDirs(bat,mesh, df)
-    #     writeSlurmFiles(bat,mesh)
-    #     shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(bat)+"/journalFiles/test"+str(mesh)+".jou")
-    #     shutil.copyfile(sourcePath+"fluentTest.slurm", deployPath+"batch_"+str(bat)+"/slurmFiles/fluentTest"+str(mesh)+".slurm")
+    # for idx2, mesh in enumerate(df.loc[(df['Batch'] == bat)]['Mesh #'].unique()):
+    for idx2, mesh in enumerate(range(10)):
+        writeJouDirs(bat,mesh, df)
+        writeSlurmFiles(bat,mesh)
+        shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(bat)+"/journalFiles/test"+str(mesh)+".jou")
+        shutil.copyfile(sourcePath+"fluentTest.slurm", deployPath+"batch_"+str(bat)+"/slurmFiles/fluentTest"+str(mesh)+".slurm")

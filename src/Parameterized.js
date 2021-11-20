@@ -23,8 +23,8 @@ var D1 = D_1
 var D2 = D_1*D_subFrac
 var angle_deg = 90-angle
 var angle_rad = (angle_deg)*Math.PI/180
-var length_num = 1
-var width_num = 1
+var length_num = 4
+var width_num = 3
 var oblong = compFactor
 var spacerOverlap = 0.1*D1*oblong
 

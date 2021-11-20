@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=binger_batch_20_mesh_9
+#SBATCH --job-name=binger_batch_19_mesh_9
 #SBATCH --ntasks=4
 #SBATCH --mem=20gb
 #SBATCH --nodes=1
@@ -14,4 +14,4 @@
 pwd; hostname; date
  
 module load ansys/20.1
-fluent 3ddp -meshing -g -t4 -i /groups/achilli/EPRI/batch_20/journalFiles/test9.jou > /groups/achilli/EPRI/batch_20/reports/mesh_9.out
+fluent 3ddp -meshing -g -t4 -i /groups/achilli/EPRI/batch_19/journalFiles/test9.jou > /groups/achilli/EPRI/batch_19/reports/mesh_9.out
