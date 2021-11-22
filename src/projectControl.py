@@ -17,6 +17,11 @@ slurmPath = deployPath + '/slurmFiles/'
 reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
+iterations = 100
+numberofplanes = 4
+samplePlanes = list(range(1,numberofplanes+1))
+samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
+
 df = pd.read_csv(reportPath+'progressReport.csv')
 paramDF = pd.read_csv(reportPath+'testParams200.csv')
 paramsPerBatch = 10
@@ -73,12 +78,15 @@ def writeSlurmFiles(batch,m):
 def addExp(b,m,d,v):
     batchNum = b
     denStrings = ['water-di', 'water-35g', 'water-70g', 'water-120g']
-    str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
+    # str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
+    str3 = "/report surface-integrals area-weighted-avg inlet "+" ".join(samplingPlanes)+" outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str4_front = '/define b-c fluid fluid yes '
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
     str5_back = ' no 0 , , , , ,'
-    vels = ["005","015","025","035"]
+    reportStr = "/report summary y "+HPCDir+"/batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
+    residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals_"+str(m)+".dat\n"
+    exportStr = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/exp_"+str(m)+" pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
 
     stringList = []
     stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
@@ -87,8 +95,12 @@ def addExp(b,m,d,v):
             stringList.append(';initialize'+'\n')
             stringList.append('/solve initialize initialize-flow yes'+'\n')
             stringList.append(';solve'+'\n')
-            stringList.append('/solve iterate 300'+'\n')
+            stringList.append('/solve iterate '+str(iterations)+'\n')
             stringList.append(str3+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".srp\n")
+            stringList.append(reportStr)
+            stringList.append('/solve iterate 1'+'\n')
+            stringList.append(residualStr)
+            stringList.append(exportStr)
             stringList.append(';'+'\n')
             stringList.append(';'+'\n')
             stringList.append(';'+'\n')
@@ -110,7 +122,7 @@ def writeJouDirs(batch,m, df):
     unitCellLen = unitCellLens[(10*(batch-1))+m]
     planeStrings = string_list[15:23]
     newPlaneStrings = []
-    for idx, plane in enumerate(planeStrings):
+    for idx, plane in enumerate(samplingPlanes):
         newPlaneStrings.append(str2+str(idx+1)+" "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1 0 0\n")
     string_list[15:23] = newPlaneStrings
 
