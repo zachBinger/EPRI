@@ -434,22 +434,11 @@ ag.listview.ItemValue = "Apply";
 ag.listview.ActivateItem("Direction Definition");
 ag.listview.ItemValue = "Coordinates";
 
+ag.listview.ActivateItem("FD3, X Offset");
+ag.listview.ItemValue = (2*L1+L2)*Math.sin(angle_rad)-1*bodyOverlap2;
+
 ag.listview.ActivateItem("FD4, Y Offset");
 ag.listview.ItemValue = 0.5*(D1*oblong)-bodyOverlap;
-
-agb.Regen();
-
-ag.gui.CreateBodyOp(10);
-ag.listview.ActivateItem("Preserve Bodies?");
-ag.listview.ItemValue = "NO";
-
-ag.listview.ActivateItem("Bodies");
-agb.ClearSelections();
-agb.AddSelect(agc.TypeBody, ag.fm.Body(1)); 
-ag.listview.ItemValue = "Apply";
-
-ag.listview.ActivateItem("Direction Definition");
-ag.listview.ItemValue = "Coordinates";
 
 ag.listview.ActivateItem("FD5, Z Offset");
 ag.listview.ItemValue = -1*bodyOverlap2;

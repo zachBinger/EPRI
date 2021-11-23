@@ -19,11 +19,12 @@ sourcePath = localDir + '/src/'
 
 iterations = 100
 numberofplanes = 4
-samplePlanes = list(range(1,numberofplanes+1))
+samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
 
 df = pd.read_csv(reportPath+'progressReport.csv')
 paramDF = pd.read_csv(reportPath+'testParams200.csv')
+paramDF['angle'] = 90 - paramDF['angle']
 paramsPerBatch = 10
 df['Batch'] = df['Batch']-1
 
@@ -44,11 +45,11 @@ P6 = [round(num, 4) for num in P6]
 p = [P1,P2,P3,P4,P5,P6]
 
 def getUnitCellLen(a):
-    ang = math.cos(math.radians(a))
+    ang = math.sin(math.radians(a))
     return ang
 
 angles = list(map(getUnitCellLen,paramDF['angle'].values))
-unitCellLens = 2*(paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
+unitCellLens = (paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
 
 def writeSlurmFiles(batch,m):
     cores = 4
@@ -119,11 +120,13 @@ def writeJouDirs(batch,m, df):
 
     string_list[1] = str1+"mesh_"+str(m)+".msh"+"\n"
 
-    unitCellLen = unitCellLens[(10*(batch-1))+m]
+    unitCellLen = unitCellLens[(10*(batch))+m]
+    # print(batch,m, unitCellLen, paramDF['L_Total'][(10*(batch))+m]*math.sin(math.radians(paramDF['angle'][(10*(batch))+m])))
     planeStrings = string_list[15:23]
     newPlaneStrings = []
     for idx, plane in enumerate(samplingPlanes):
-        newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
+        newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-0.0003,6))+" 0 0 1\n")
+        # newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
     string_list[15:23] = newPlaneStrings
 
     densities = df.loc[(df['Batch'] == batch) & (df['Mesh #'] == m)]['Density'].unique()
