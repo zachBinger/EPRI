@@ -123,7 +123,7 @@ def writeJouDirs(batch,m, df):
     planeStrings = string_list[15:23]
     newPlaneStrings = []
     for idx, plane in enumerate(samplingPlanes):
-        newPlaneStrings.append(str2+str(idx+1)+" "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1 0 0\n")
+        newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
     string_list[15:23] = newPlaneStrings
 
     densities = df.loc[(df['Batch'] == batch) & (df['Mesh #'] == m)]['Density'].unique()
