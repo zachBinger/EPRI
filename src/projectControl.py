@@ -18,7 +18,7 @@ reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
 iterations = 100
-numberofplanes = 8
+numberofplanes = 4
 samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
 
@@ -86,8 +86,8 @@ def addExp(b,m,d,v):
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
     str5_back = ' no 0 , , , , ,'
     reportStr = "/report summary y "+HPCDir+"/batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
-    residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals_"+str(m)+".dat\n"
-    exportStr = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/exp_"+str(m)+" pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
+    residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
+    exportStr = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/exp_"+str(m)+" pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
 
     stringList = []
     stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
