@@ -33,6 +33,6 @@
 /surface plane-point-n-normal hPlane9 0 0.0002 0 0 1 0
 ;
 ;
-;
-;
+;/define models viscous laminar yes
+;/solve set p-v 20
 ;

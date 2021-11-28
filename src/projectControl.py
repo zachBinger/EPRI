@@ -18,7 +18,7 @@ reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
 iterations = 100
-numberofplanes = 4
+numberofplanes = 8
 samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
 
@@ -125,7 +125,7 @@ def writeJouDirs(batch,m, df):
     planeStrings = string_list[15:23]
     newPlaneStrings = []
     for idx, plane in enumerate(samplingPlanes):
-        newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-0.0003,6))+" 0 0 1\n")
+        newPlaneStrings.append(str2+str(idx+1)+" "+str(round(unitCellLen*(idx+1)-0.0003,6))+" 0 0 1 0 0\n")
         # newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
     string_list[15:23] = newPlaneStrings
 
