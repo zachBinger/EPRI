@@ -15,3 +15,4 @@ pwd; hostname; date
  
 module load ansys/20.1
 fluent 3ddp -meshing -g -t48 -i /groups/achilli/EPRI2021/scripts/fluentScripts/test1/test2.jou > /groups/achilli/EPRI2021/data/outputFiles/meshTests/mesh0.out
+

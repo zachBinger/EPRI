@@ -70,4 +70,4 @@ print(list(residuals.keys()))
 compareResiduals(residuals)
 # cRes, xRes,yRes,zRes = getSimQuality(residuals['komega_coupled'])
 
-# print(cRes, xRes,yRes,zRes)
+# print(cRes, xRes,yRes,zRes) 

@@ -11,8 +11,8 @@
 /define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
 /define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
 ;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
-;
-;
+;/define models species species-transport yes 
+;/define materials change-create 
 /surface plane-point-n-normal vPlane1 0.001566 0 0 1 0 0
 /surface plane-point-n-normal vPlane2 0.004697 0 0 1 0 0
 /surface plane-point-n-normal vPlane3 0.007828 0 0 1 0 0
@@ -34,5 +34,5 @@
 ;
 ;
 ;
-;
-;
+;/define b-c velocity-inlet inlet no no yes yes no 0.05 , , , , , , , , , , , 0.1
+;/define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,

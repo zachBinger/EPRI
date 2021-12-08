@@ -85,10 +85,11 @@ def addExp(b,m,d,v):
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
     str5_back = ' no 0 , , , , ,'
-    reportStr = "/report summary y "+HPCDir+"/batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
-    residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
-    exportStr = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/exp_"+str(m)+" pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
-
+    reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
+    # residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
+    residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/"
+    exportStr_front = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/mesh_"
+    exportStr_back = " pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
     stringList = []
     stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
     for idx, vel in enumerate(v):
@@ -99,14 +100,14 @@ def addExp(b,m,d,v):
             stringList.append('/solve iterate '+str(iterations)+'\n')
             stringList.append(str3+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".srp\n")
             stringList.append(reportStr)
+            stringList.append(residualStr+"residuals_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".dat\n")
             stringList.append('/solve iterate 1'+'\n')
-            stringList.append(residualStr)
-            stringList.append(exportStr)
+            stringList.append(exportStr_front+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+exportStr_back)
             stringList.append(';'+'\n')
             stringList.append(';'+'\n')
             stringList.append(';'+'\n')
 
-    return stringList     
+    return stringList 
 
 def writeJouDirs(batch,m, df):
     str1 = "/file read-mesh "+HPCDir+"batch_"+str(batch)+"/assets/"
@@ -192,7 +193,9 @@ def writeString(batch, batchDir, params, paramsPerBatch = paramsPerBatch):
 
     for idx in range(len(params)):
         string_list[idx+1] = params[idx]
-
+    
+    # string_list[7] = 'chmod 777 /groups/achilli/EPRI/batch_'+str(batch)+'/\n'
+    
     for idx in range(7):
         string_list[14] = '    sed -i "12s#.*#var D_1 = ${d1[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'
         string_list[15] = '    sed -i "13s#.*#var D_subFrac = ${dsub[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'

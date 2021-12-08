@@ -26,5 +26,4 @@ do
     runwb2 -X -R "/groups/achilli/EPRI/batch_19/meshGen/meshJournal.wbjn"
 	i=$((i+1))
 done
-
 echo "Done"

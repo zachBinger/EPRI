@@ -90,3 +90,8 @@ target/
 
 deploy/
 *.dat
+batch_2_working.js
+.gitignore
+Parameterized2.js
+src/shellscript_source.sh
+fluentTest_source.slurm
