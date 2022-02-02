@@ -153,14 +153,20 @@ ListView.ItemValue = "CFD";
 
 ListView.ActivateItem("Element Size"); //Set 'Size' option to 'CFD'
 ListView.ItemValue = 0.00005;
-lGroupDefaults.Expand = 0; //Collapse group
+// lGroupDefaults.Expand = 0; //Collapse group
 
 //Set options in 'Sizing' group
 var lGroupSizing = ListView.FindGroup(3);
 lGroupSizing.Expand = 1; //Expand
 
 ListView.ActivateItem("Max Size");
-ListView.ItemValue = 0.00005;
+ListView.ItemValue = 0.001;
+
+ListView.ActivateItem("Capture Proximity");
+ListView.ItemValue = "Yes";
+
+ListView.ActivateItem("Num Cells Across Gap");
+ListView.ItemValue = 5;
 
 DS.Script.doInsertMeshSize(1)
 ListView.ActivateItem("Scoping Method");
@@ -168,25 +174,19 @@ ListView.ItemValue = "Named Selection" ;
 ListView.ActivateItem("Named Selection");
 ListView.ItemValue = "bottom" ;
 ListView.ActivateItem("Element Size");
-ListView.ItemValue = "0.000005"
+ListView.ItemValue = 0.00002
 ListView.ActivateItem("Growth Rate");
 ListView.ItemValue = 1.2
 
-//Set sizing options
-// ListView.ActivateItem("Capture Proximity");
-// ListView.ItemValue = "Yes";
-
-//Set sizing options
-// ListView.ActivateItem("Num Cells Across Gap");
-// ListView.ItemValue = 10;
-
-// //Set sizing options
-// ListView.ActivateItem("Proximity Min Size");
-// ListView.ItemValue = 0.0000001;
-
-// //Set sizing options
-// ListView.ActivateItem("Defeature Size");
-// ListView.ItemValue = 0.0000001;
+// DS.Script.doInsertMeshSize(1)
+// ListView.ActivateItem("Scoping Method");
+// ListView.ItemValue = "Named Selection" ;
+// ListView.ActivateItem("Named Selection");
+// ListView.ItemValue = "top" ;
+// ListView.ActivateItem("Element Size");
+// ListView.ItemValue = 0.00002
+// ListView.ActivateItem("Growth Rate");
+// ListView.ItemValue = 1.2
 
 DS.Script.doInsertInflation(1)
 ListView.ActivateItem("Scoping Method");
@@ -198,13 +198,13 @@ ListView.ItemValue = "Named Selections" ;
 ListView.ActivateItem("Boundary");
 ListView.ItemValue = "bottom"
 ListView.ActivateItem("Inflation Option");
-ListView.ItemValue = "First Layer Thickness" ;
-ListView.ActivateItem("First Layer Height");
-ListView.ItemValue = "0.0000001"
-ListView.ActivateItem("Maximum Layers");
-ListView.ItemValue = "10"
+ListView.ItemValue = "Total Thickness" ;
+ListView.ActivateItem("Number of Layers");
+ListView.ItemValue = 15
 ListView.ActivateItem("Growth Rate");
-ListView.ItemValue = "1.2"
+ListView.ItemValue = 1.1
+ListView.ActivateItem("Maximum Thickness");
+ListView.ItemValue = 0.000015
 
 //Generate Mesh
 DS.Script.doModelPreviewMeshFromToolbar(1)

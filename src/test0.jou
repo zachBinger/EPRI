@@ -9,10 +9,15 @@
 /define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
 /define materials change-create water-liquid water-35g yes constant 1024.9 no no yes constant 0.001077 no no no no
 /define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
-/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
-;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
-;/define models species species-transport yes 
-;/define materials change-create 
+/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant 0.001326 no no no no
+/define models species species-transport yes inert-mixture
+/define materials change-create inert-mixture draw120-perm yes 2 water-120g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw70-perm yes 2 water-70g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw35-perm yes 2 water-35g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw0-perm yes 2 water-di water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
 /surface plane-point-n-normal vPlane1 0.001566 0 0 1 0 0
 /surface plane-point-n-normal vPlane2 0.004697 0 0 1 0 0
 /surface plane-point-n-normal vPlane3 0.007828 0 0 1 0 0
@@ -21,18 +26,5 @@
 /surface plane-point-n-normal vPlane6 0.017222 0 0 1 0 0
 /surface plane-point-n-normal vPlane7 0.020354 0 0 1 0 0
 /surface plane-point-n-normal vPlane8 0.04188 0 0 1 0 0
-/surface plane-point-n-normal hPlane0 0 0.00002 0 0 1 0
-/surface plane-point-n-normal hPlane1 0 0.00004 0 0 1 0
-/surface plane-point-n-normal hPlane2 0 0.00006 0 0 1 0
-/surface plane-point-n-normal hPlane3 0 0.00008 0 0 1 0
-/surface plane-point-n-normal hPlane4 0 0.0001 0 0 1 0
-/surface plane-point-n-normal hPlane5 0 0.00012 0 0 1 0
-/surface plane-point-n-normal hPlane6 0 0.00014 0 0 1 0
-/surface plane-point-n-normal hPlane7 0 0.00016 0 0 1 0
-/surface plane-point-n-normal hPlane8 0 0.00018 0 0 1 0
-/surface plane-point-n-normal hPlane9 0 0.0002 0 0 1 0
-;
-;
-;
-;/define b-c velocity-inlet inlet no no yes yes no 0.05 , , , , , , , , , , , 0.1
-;/define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,
+/define models species species-transport yes draw0-perm
+/define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,

@@ -172,40 +172,6 @@ ListView.ItemValue = "0.000005"
 ListView.ActivateItem("Growth Rate");
 ListView.ItemValue = 1.2
 
-//Set sizing options
-// ListView.ActivateItem("Capture Proximity");
-// ListView.ItemValue = "Yes";
-
-//Set sizing options
-// ListView.ActivateItem("Num Cells Across Gap");
-// ListView.ItemValue = 10;
-
-// //Set sizing options
-// ListView.ActivateItem("Proximity Min Size");
-// ListView.ItemValue = 0.0000001;
-
-// //Set sizing options
-// ListView.ActivateItem("Defeature Size");
-// ListView.ItemValue = 0.0000001;
-
-DS.Script.doInsertInflation(1)
-ListView.ActivateItem("Scoping Method");
-ListView.ItemValue = "Named Selection" ;
-ListView.ActivateItem("Named Selection");
-ListView.ItemValue = "fluid" ;
-ListView.ActivateItem("Boundary Scoping Method");
-ListView.ItemValue = "Named Selections" ;
-ListView.ActivateItem("Boundary");
-ListView.ItemValue = "bottom"
-ListView.ActivateItem("Inflation Option");
-ListView.ItemValue = "First Layer Thickness" ;
-ListView.ActivateItem("First Layer Height");
-ListView.ItemValue = "0.0000001"
-ListView.ActivateItem("Maximum Layers");
-ListView.ItemValue = "10"
-ListView.ActivateItem("Growth Rate");
-ListView.ItemValue = "1.2"
-
 //Generate Mesh
 DS.Script.doModelPreviewMeshFromToolbar(1)
 DS.Script.doFileExport("/groups/achilli/EPRI2021/meshes/scriptedMeshes/batch1/mesh_X.msh")

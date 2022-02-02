@@ -1,0 +1,21 @@
+;import mesh
+/file read-mesh /groups/achilli/EPRI2021/meshes/scriptedMeshes/batch20/mesh_9.msh
+;
+;switch mode
+/switch-to-solution-mode yes
+;
+;define materials
+/define materials copy fluid water-liquid
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create water-liquid water-35g yes constant 1024.9 no no yes constant 0.001077 no no no no
+/define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
+/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
+;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
+/define models species species-transport yes inert-mixture
+/define materials change-create inert-mixture draw-perm yes 2 water-70g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define models species species-transport yes draw-perm
+;
+;
+/define b-c fluid fluid mixture yes draw-perm , , , , , , , , , , , , , , , , , , , ,
+/define b-c velocity-inlet inlet no no yes yes no 0.05 , , , , , , , , , , , 1
+/define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,

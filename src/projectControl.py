@@ -17,7 +17,7 @@ slurmPath = deployPath + '/slurmFiles/'
 reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
-iterations = 100
+iterations = 5
 numberofplanes = 4
 samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
@@ -48,16 +48,21 @@ def getUnitCellLen(a):
     ang = math.sin(math.radians(a))
     return ang
 
+def getUnitCellWidth(a):
+    ang = math.cos(math.radians(a))
+    return ang
+
 angles = list(map(getUnitCellLen,paramDF['angle'].values))
 unitCellLens = (paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF['angle'].values))
+unitCellWids = (paramDF['L_Total'].values/1000)*list(map(getUnitCellWidth,paramDF['angle'].values))
 
 def writeSlurmFiles(batch,m):
-    cores = 4
-    hrs = 1
+    cores = 94
+    hrs = 24
     mem = cores*5
 
     str1 = "#SBATCH --job-name=binger_"
-    str2_front = "fluent 3ddp -meshing -g -t"+str(cores)+" -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
+    str2_front = "fluent 3ddp -meshing -g -t"+str(16)+" -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
     str2_back = " > "+HPCDir+"batch_"+str(batch)+"/reports/"
 
     my_file = open(sourcePath+"fluentTest.slurm", "r")
@@ -79,25 +84,34 @@ def writeSlurmFiles(batch,m):
 def addExp(b,m,d,v):
     batchNum = b
     denStrings = ['water-di', 'water-35g', 'water-70g', 'water-120g']
+    mixStrings = ['draw0-perm', 'draw35-perm', 'draw70-perm', 'draw120-perm']
+    str1 = '/define models species species-transport yes '
+    str2_front = '/define b-c fluid fluid mixture yes '
+    str2_back = ' , , , , , , , , , , , , , , , , , , , ,'
     # str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str3 = "/report surface-integrals area-weighted-avg inlet "+" ".join(samplingPlanes)+" outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str4_front = '/define b-c fluid fluid yes '
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
-    str5_back = ' no 0 , , , , ,'
+    str5_back = ' , , , , , , , , , , , 1'
+    str6_front = "/plot plot yes "+HPCDir+"batch_"+str(batchNum)+"/data/raw/"
+    str6_back = " no yes 0 1 0 no no "+denStrings[d-1]+" centerline ,\n"
     reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
     # residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
     residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/"
     exportStr_front = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/mesh_"
     exportStr_back = " pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
     stringList = []
-    stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
+    # stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
+    stringList.append(str1+mixStrings[d-1]+'\n')
+    stringList.append(str2_front+mixStrings[d-1]+str2_back+'\n')
     for idx, vel in enumerate(v):
             stringList.append(str5_front+str(v[idx])+str5_back+'\n')
             stringList.append(';initialize'+'\n')
             stringList.append('/solve initialize initialize-flow yes'+'\n')
             stringList.append(';solve'+'\n')
             stringList.append('/solve iterate '+str(iterations)+'\n')
+            stringList.append(str6_front+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".txt"+str6_back)
             stringList.append(str3+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".srp\n")
             stringList.append(reportStr)
             stringList.append(residualStr+"residuals_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".dat\n")
@@ -117,18 +131,24 @@ def writeJouDirs(batch,m, df):
     my_file = open(sourcePath+"test0.jou", "r")
     string_list = my_file.readlines()
     my_file.close()
-    string_list[35:] = []
+    string_list[31:] = []
 
     string_list[1] = str1+"mesh_"+str(m)+".msh"+"\n"
 
     unitCellLen = unitCellLens[(10*(batch))+m]
+    unitCellWidth = unitCellWids[(10*(batch))+m]
     # print(batch,m, unitCellLen, paramDF['L_Total'][(10*(batch))+m]*math.sin(math.radians(paramDF['angle'][(10*(batch))+m])))
-    planeStrings = string_list[15:23]
+    planeStrings = string_list[17:23]
     newPlaneStrings = []
     for idx, plane in enumerate(samplingPlanes):
         newPlaneStrings.append(str2+str(idx+1)+" "+str(round(unitCellLen*(idx+1)-0.0003,6))+" 0 0 1 0 0\n")
         # newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
-    string_list[15:23] = newPlaneStrings
+    line_zloc = unitCellWidth*4
+    line_xloc = unitCellLen*3
+    newPlaneStrings.append('/surface line-surface centerline '+str(round(line_xloc,6))+' 0 '+str(round(line_zloc,6))+' '+str(round(line_xloc,6))+' 0.001 '+str(round(line_zloc,6))+'\n')
+    string_list[20:28] = newPlaneStrings
+
+
 
     densities = df.loc[(df['Batch'] == batch) & (df['Mesh #'] == m)]['Density'].unique()
     newStrings = []
@@ -204,7 +224,7 @@ def writeString(batch, batchDir, params, paramsPerBatch = paramsPerBatch):
         string_list[18] = '    sed -i "16s#.*#var D2 = ${lsub[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'
         string_list[19] = '    sed -i "17s#.*#var angle = ${angle[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'
         string_list[20] = '    sed -i "18s#.*#var compFactor = ${compfac[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'
-        string_list[23] = '    sed -i "218s#.*#DS.Script.doFileExport('+"'"+HPCDir+"batch_"+str(batch)+"/assets/mesh_${i}.msh')#"+'" '+ HPCDir+'batch_'+str(batch)+'/meshGen/boundaryNaming3.js\n'
+        string_list[23] = '    sed -i "211s#.*#DS.Script.doFileExport('+"'"+HPCDir+"batch_"+str(batch)+"/assets/mesh_${i}.msh')#"+'" '+ HPCDir+'batch_'+str(batch)+'/meshGen/boundaryNaming3.js\n'
         string_list[25] = '    runwb2 -X -R "/groups/achilli/EPRI/batch_'+str(batch)+'/meshGen/meshJournal.wbjn"\n'
     my_file = open(batchDir, "w")
     new_file_contents = "".join(string_list)
@@ -249,3 +269,4 @@ for idx, bat in enumerate(range(20)):
         writeSlurmFiles(bat,mesh)
         shutil.copyfile(sourcePath+"test0Auto.jou", deployPath+"batch_"+str(bat)+"/journalFiles/test"+str(mesh)+".jou")
         shutil.copyfile(sourcePath+"fluentTest.slurm", deployPath+"batch_"+str(bat)+"/slurmFiles/fluentTest"+str(mesh)+".slurm")
+    shutil.copyfile(sourcePath+"allRun.sh", deployPath+"batch_"+str(bat)+"/slurmFiles/allRun.sh")

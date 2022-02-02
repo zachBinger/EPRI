@@ -21,7 +21,7 @@ do
     sed -i "18s#.*#var compFactor = ${compfac[$i]}#" /groups/achilli/EPRI/batch_19/meshGen/Parameterized.js
 
 	# Change mesh name in meshScript.js last line
-    sed -i "218s#.*#DS.Script.doFileExport('/groups/achilli/EPRI/batch_19/assets/mesh_${i}.msh')#" /groups/achilli/EPRI/batch_19/meshGen/boundaryNaming3.js
+    sed -i "211s#.*#DS.Script.doFileExport('/groups/achilli/EPRI/batch_19/assets/mesh_${i}.msh')#" /groups/achilli/EPRI/batch_19/meshGen/boundaryNaming3.js
 	echo "Generating mesh_${i}.msh"
     runwb2 -X -R "/groups/achilli/EPRI/batch_19/meshGen/meshJournal.wbjn"
 	i=$((i+1))

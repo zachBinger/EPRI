@@ -9,29 +9,29 @@
 /define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
 /define materials change-create water-liquid water-35g yes constant 1024.9 no no yes constant 0.001077 no no no no
 /define materials change-create water-liquid water-70g yes constant 1051.8 no no yes constant 0.001168 no no no no
-/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant  0.001326 no no no no
-;/define boundary-conditions modify-zones create-periodic-interface non-conformal sidewalls symmetry1 symmetry2 no , , ,
-;
-;
+/define materials change-create water-liquid water-120g yes constant 1090.3 no no yes constant 0.001326 no no no no
+/define models species species-transport yes inert-mixture
+/define materials change-create inert-mixture draw120-perm yes 2 water-120g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw70-perm yes 2 water-70g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw35-perm yes 2 water-35g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
+/define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
+/define materials change-create inert-mixture draw0-perm yes 2 water-di water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
 /surface plane-point-n-normal vPlane1 0.001266 0 0 1 0 0
 /surface plane-point-n-normal vPlane2 0.002831 0 0 1 0 0
 /surface plane-point-n-normal vPlane3 0.004397 0 0 1 0 0
-/surface plane-point-n-normal hPlane0 0 0.00002 0 0 1 0
-/surface plane-point-n-normal hPlane1 0 0.00004 0 0 1 0
-/surface plane-point-n-normal hPlane2 0 0.00006 0 0 1 0
-/surface plane-point-n-normal hPlane3 0 0.00008 0 0 1 0
-/surface plane-point-n-normal hPlane4 0 0.0001 0 0 1 0
-/surface plane-point-n-normal hPlane5 0 0.00012 0 0 1 0
-/surface plane-point-n-normal hPlane6 0 0.00014 0 0 1 0
-/surface plane-point-n-normal hPlane7 0 0.00016 0 0 1 0
-/surface plane-point-n-normal hPlane8 0 0.00018 0 0 1 0
-/surface plane-point-n-normal hPlane9 0 0.0002 0 0 1 0
-;
-;
-/define b-c fluid fluid yes water-di no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
-/define b-c fluid fluid yes water-35g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
-/define b-c fluid fluid yes water-70g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
-/define b-c fluid fluid yes water-120g no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no
+/surface line-surface centerline 0.004697 0 0.011358 0.004697 0.001 0.011358
+/define models species species-transport yes draw0-perm
+/define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,
+/define models species species-transport yes draw0-perm
+/define b-c fluid fluid mixture yes draw0-perm , , , , , , , , , , , , , , , , , , , ,
+/define models species species-transport yes draw35-perm
+/define b-c fluid fluid mixture yes draw35-perm , , , , , , , , , , , , , , , , , , , ,
+/define models species species-transport yes draw70-perm
+/define b-c fluid fluid mixture yes draw70-perm , , , , , , , , , , , , , , , , , , , ,
+/define models species species-transport yes draw120-perm
+/define b-c fluid fluid mixture yes draw120-perm , , , , , , , , , , , , , , , , , , , ,
 /report/system/proc-stats
 /report system time-stats
 /parallel timer usage
