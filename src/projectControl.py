@@ -17,8 +17,8 @@ slurmPath = deployPath + '/slurmFiles/'
 reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
-iterations = 5
-numberofplanes = 4
+iterations = 299
+numberofplanes = 8
 samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
 
@@ -45,11 +45,11 @@ P6 = [round(num, 4) for num in P6]
 p = [P1,P2,P3,P4,P5,P6]
 
 def getUnitCellLen(a):
-    ang = math.sin(math.radians(a))
+    ang = math.cos(math.radians(a))
     return ang
 
 def getUnitCellWidth(a):
-    ang = math.cos(math.radians(a))
+    ang = math.sin(math.radians(a))
     return ang
 
 angles = list(map(getUnitCellLen,paramDF['angle'].values))
@@ -57,7 +57,7 @@ unitCellLens = (paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF[
 unitCellWids = (paramDF['L_Total'].values/1000)*list(map(getUnitCellWidth,paramDF['angle'].values))
 
 def writeSlurmFiles(batch,m):
-    cores = 94
+    cores = 64
     hrs = 24
     mem = cores*5
 
@@ -94,9 +94,9 @@ def addExp(b,m,d,v):
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
     str5_back = ' , , , , , , , , , , , 1'
-    str6_front = "/plot plot yes "+HPCDir+"batch_"+str(batchNum)+"/data/raw/"
-    str6_back = " no yes 0 1 0 no no "+denStrings[d-1]+" centerline ,\n"
-    reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
+    str6_front = "/plot plot yes "+HPCDir+"batch_"+str(batchNum)+"/data/concProfile/"
+    str6_back = " no yes 0 1 0 no no "+denStrings[d-1]+" (centerline) \n"
+    # reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
     # residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
     residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/"
     exportStr_front = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/mesh_"
@@ -113,6 +113,7 @@ def addExp(b,m,d,v):
             stringList.append('/solve iterate '+str(iterations)+'\n')
             stringList.append(str6_front+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".txt"+str6_back)
             stringList.append(str3+"mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".srp\n")
+            reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".sum\n"
             stringList.append(reportStr)
             stringList.append(residualStr+"residuals_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".dat\n")
             stringList.append('/solve iterate 1'+'\n')
@@ -131,7 +132,7 @@ def writeJouDirs(batch,m, df):
     my_file = open(sourcePath+"test0.jou", "r")
     string_list = my_file.readlines()
     my_file.close()
-    string_list[31:] = []
+    string_list[33:] = []
 
     string_list[1] = str1+"mesh_"+str(m)+".msh"+"\n"
 
@@ -143,8 +144,8 @@ def writeJouDirs(batch,m, df):
     for idx, plane in enumerate(samplingPlanes):
         newPlaneStrings.append(str2+str(idx+1)+" "+str(round(unitCellLen*(idx+1)-0.0003,6))+" 0 0 1 0 0\n")
         # newPlaneStrings.append(str2+str(idx+1)+" 0 0 "+str(round(unitCellLen*(idx+1)-unitCellLen/2,6))+" 0 0 1\n")
-    line_zloc = unitCellWidth*4
-    line_xloc = unitCellLen*3
+    line_zloc = unitCellWidth*2
+    line_xloc = unitCellLen*6
     newPlaneStrings.append('/surface line-surface centerline '+str(round(line_xloc,6))+' 0 '+str(round(line_zloc,6))+' '+str(round(line_xloc,6))+' 0.001 '+str(round(line_zloc,6))+'\n')
     string_list[20:28] = newPlaneStrings
 
@@ -181,6 +182,7 @@ def makeBatch(batchNum):
         os.mkdir(batchPath+'slurmFiles/')
         os.mkdir(batchPath+'reports/')
         os.mkdir(batchPath+'meshGen/')
+        os.mkdir(batchPath+'data/concProfile/')
 
 def writeString(batch, batchDir, params, paramsPerBatch = paramsPerBatch):
     str1 = "d1=( "

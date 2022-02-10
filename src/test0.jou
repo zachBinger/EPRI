@@ -28,3 +28,5 @@
 /surface plane-point-n-normal vPlane8 0.04188 0 0 1 0 0
 /define models species species-transport yes draw0-perm
 /define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,
+/solve monitors residual convergence-criteria 0.000001 0.000001 0.000001 0.000001 0.000001 0.000001
+/solve monitors residual yes yes yes yes no yes

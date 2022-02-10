@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=binger_batch_19_mesh_9
-#SBATCH --ntasks=94
-#SBATCH --mem=470gb
+#SBATCH --ntasks=64
+#SBATCH --mem=320gb
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=94
-#SBATCH --time=24:00:00
+#SBATCH --ntasks-per-node=64
+#SBATCH --time=12:00:00
 #SBATCH --partition=standard
 #SBATCH --account=achilli
 #SBATCH --mail-type=ALL
