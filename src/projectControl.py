@@ -17,6 +17,10 @@ slurmPath = deployPath + '/slurmFiles/'
 reportPath = localDir + '/reports/'
 sourcePath = localDir + '/src/'
 
+# Define simulation parameters
+cores = 64
+hrs = 24
+mem = cores*5
 iterations = 299
 numberofplanes = 8
 samplePlanes = list(range(1,numberofplanes))
@@ -28,19 +32,19 @@ paramDF['angle'] = 90 - paramDF['angle']
 paramsPerBatch = 10
 df['Batch'] = df['Batch']-1
 
-P1 = paramDF['D_1'].tolist()
-P2 = paramDF['D_subFrac'].tolist()
-P3 = paramDF['L_Total'].tolist()
-P4 = paramDF['L_subFrac'].tolist()
-P5 = paramDF['angle'].tolist()
-P6 = paramDF['compFactor'].tolist()
+# P1 = paramDF['D_1'].tolist()
+# P2 = paramDF['D_subFrac'].tolist()
+# P3 = paramDF['L_Total'].tolist()
+# P4 = paramDF['L_subFrac'].tolist()
+# P5 = paramDF['angle'].tolist()
+# P6 = paramDF['compFactor'].tolist()
 
-P1 = [round(num, 4) for num in P1]
-P2 = [round(num, 4) for num in P2]
-P3 = [round(num, 4) for num in P3]
-P4 = [round(num, 4) for num in P4]
-P5 = [round(num, 4) for num in P5]
-P6 = [round(num, 4) for num in P6]
+P1 = [round(num, 4) for num in paramDF['D_1'].tolist()]
+P2 = [round(num, 4) for num in paramDF['D_subFrac'].tolist()]
+P3 = [round(num, 4) for num in paramDF['L_Total'].tolist()]
+P4 = [round(num, 4) for num in paramDF['L_subFrac'].tolist()]
+P5 = [round(num, 4) for num in paramDF['angle'].tolist()]
+P6 = [round(num, 4) for num in paramDF['compFactor'].tolist()]
 
 p = [P1,P2,P3,P4,P5,P6]
 
@@ -57,10 +61,6 @@ unitCellLens = (paramDF['L_Total'].values/1000)*list(map(getUnitCellLen,paramDF[
 unitCellWids = (paramDF['L_Total'].values/1000)*list(map(getUnitCellWidth,paramDF['angle'].values))
 
 def writeSlurmFiles(batch,m):
-    cores = 64
-    hrs = 24
-    mem = cores*5
-
     str1 = "#SBATCH --job-name=binger_"
     str2_front = "fluent 3ddp -meshing -g -t"+str(16)+" -i "+HPCDir+"batch_"+str(batch)+"/journalFiles"
     str2_back = " > "+HPCDir+"batch_"+str(batch)+"/reports/"
@@ -88,19 +88,18 @@ def addExp(b,m,d,v):
     str1 = '/define models species species-transport yes '
     str2_front = '/define b-c fluid fluid mixture yes '
     str2_back = ' , , , , , , , , , , , , , , , , , , , ,'
-    # str3 = "/report surface-integrals area-weighted-avg inlet vPlane1 vPlane2 vPlane3 vPlane4 vPlane5 vPlane6 vPlane7 outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str3 = "/report surface-integrals area-weighted-avg inlet "+" ".join(samplingPlanes)+" outlet , pressure yes "+HPCDir+"batch_"+str(batchNum)+"/data/pressure/"
     str4_front = '/define b-c fluid fluid yes '
     str4_back =' no no no no 0 no 0 no 0 no 0 no 0 no 1 no yes no no no'
     str5_front = '/define b-c velocity-inlet inlet no no yes yes no '
-    str5_back = ' , , , , , , , , , , , 1'
+    str5_back = ' , , , , , , 1'
     str6_front = "/plot plot yes "+HPCDir+"batch_"+str(batchNum)+"/data/concProfile/"
     str6_back = " no yes 0 1 0 no no "+denStrings[d-1]+" (centerline) \n"
     # reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+".sum\n"
     # residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/residuals_"+str(m)+".dat\n"
     residualStr = "/plot residuals-set plot-to-file "+HPCDir+"batch_"+str(batchNum)+"/data/residuals/"
     exportStr_front = "/file export ensight-gold "+HPCDir+"batch_"+str(batchNum)+"/data/raw/mesh_"
-    exportStr_back = " pressure velocity-magnitude x-velocity y-velocity z-velocity x-wall-shear y-wall-shear z-wall-shear vorticity-mag dp-dx density helicity viscosity-lam strain-rate-mag q y fluid , , , \n"
+    exportStr_back = " pressure velocity-magnitude "+denStrings[d-1] +" "+ denStrings[0] + " wall-shear vorticity-mag skin-friction-coef density viscosity-lam strain-rate-mag q y fluid , , , \n"
     stringList = []
     # stringList.append(str4_front+denStrings[d-1]+str4_back+'\n')
     stringList.append(str1+mixStrings[d-1]+'\n')
@@ -116,6 +115,8 @@ def addExp(b,m,d,v):
             reportStr = "/report summary y "+HPCDir+"batch_"+str(batchNum)+"/reports/expReport_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".sum\n"
             stringList.append(reportStr)
             stringList.append(residualStr+"residuals_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".dat\n")
+            stringList.append("/report volume-integrals volume-avg (fluid) cell-reynolds-number yes "+HPCDir+"batch_"+str(batchNum)+"/data/reynolds/mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".sum\n")
+            stringList.append("/report fluxes mass-flow yes yes "+HPCDir+"batch_"+str(batchNum)+"/data/fluxes/mesh_"+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+".sum\n")
             stringList.append('/solve iterate 1'+'\n')
             stringList.append(exportStr_front+str(m)+"_density"+str(d)+"_"+str(vel)[0]+str(vel)[2:]+exportStr_back)
             stringList.append(';'+'\n')
@@ -183,6 +184,8 @@ def makeBatch(batchNum):
         os.mkdir(batchPath+'reports/')
         os.mkdir(batchPath+'meshGen/')
         os.mkdir(batchPath+'data/concProfile/')
+        os.mkdir(batchPath+'data/reynolds/')
+        os.mkdir(batchPath+'data/fluxes/')
 
 def writeString(batch, batchDir, params, paramsPerBatch = paramsPerBatch):
     str1 = "d1=( "
@@ -215,9 +218,7 @@ def writeString(batch, batchDir, params, paramsPerBatch = paramsPerBatch):
 
     for idx in range(len(params)):
         string_list[idx+1] = params[idx]
-    
-    # string_list[7] = 'chmod 777 /groups/achilli/EPRI/batch_'+str(batch)+'/\n'
-    
+
     for idx in range(7):
         string_list[14] = '    sed -i "12s#.*#var D_1 = ${d1[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'
         string_list[15] = '    sed -i "13s#.*#var D_subFrac = ${dsub[$i]}#" '+HPCDir+'batch_'+str(batch)+'/meshGen/Parameterized.js\n'

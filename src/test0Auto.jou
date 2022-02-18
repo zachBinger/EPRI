@@ -3,7 +3,7 @@
 ;
 ;switch mode
 /switch-to-solution-mode yes
-;
+/define model viscous laminar yes
 ;define materials
 /define materials copy fluid water-liquid
 /define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no

@@ -4,10 +4,10 @@
 #SBATCH --mem=320gb
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=64
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --partition=standard
 #SBATCH --account=achilli
-#SBATCH --mail-type=ALL
+#SBATCH --mail-type=END
 #SBATCH --mail-user=zbinger@email.arizona.edu
 
 # SLURM Inherits your environment. cd $SLURM_SUBMIT_DIR not needed
