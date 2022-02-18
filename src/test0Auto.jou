@@ -18,14 +18,14 @@
 /define materials change-create inert-mixture draw35-perm yes 2 water-35g water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
 /define materials change-create water-liquid water-di yes constant 998 no no yes constant 0.001002 no no no no
 /define materials change-create inert-mixture draw0-perm yes 2 water-di water-di 0 0 yes volume-weighted-mixing-law yes mixing-law yes mass-weighted-mixing-law yes mass-weighted-mixing-law yes constant-dilute-appx 1 1.0e-11 no no
-/surface plane-point-n-normal vPlane1 0.002539 0 0 1 0 0
-/surface plane-point-n-normal vPlane2 0.005379 0 0 1 0 0
-/surface plane-point-n-normal vPlane3 0.008218 0 0 1 0 0
-/surface plane-point-n-normal vPlane4 0.011058 0 0 1 0 0
-/surface plane-point-n-normal vPlane5 0.013897 0 0 1 0 0
-/surface plane-point-n-normal vPlane6 0.016737 0 0 1 0 0
-/surface plane-point-n-normal vPlane7 0.019576 0 0 1 0 0
-/surface line-surface centerline 0.017037 0 0.003131 0.017037 0.001 0.003131
+/surface plane-point-n-normal vPlane1 0.002334 0 0 1 0 0
+/surface plane-point-n-normal vPlane2 0.004969 0 0 1 0 0
+/surface plane-point-n-normal vPlane3 0.007603 0 0 1 0 0
+/surface plane-point-n-normal vPlane4 0.010238 0 0 1 0 0
+/surface plane-point-n-normal vPlane5 0.012872 0 0 1 0 0
+/surface plane-point-n-normal vPlane6 0.015506 0 0 1 0 0
+/surface plane-point-n-normal vPlane7 0.018141 0 0 1 0 0
+/surface line-surface centerline 0.015806 0 0.008187 0.015806 0.001 0.008187
 /define models species species-transport yes draw0-perm
 /define b-c wall bottom , , , , , , , , , , , , , , , no yes no 0 , ,
 /solve monitors residual convergence-criteria 0.000001 0.000001 0.000001 0.000001 0.000001 0.000001

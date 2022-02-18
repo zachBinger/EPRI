@@ -27,7 +27,7 @@ samplePlanes = list(range(1,numberofplanes))
 samplingPlanes= ['vPlane'+str(x) for x in samplePlanes]
 
 df = pd.read_csv(reportPath+'progressReport.csv')
-paramDF = pd.read_csv(reportPath+'testParams200.csv')
+paramDF = pd.read_csv(reportPath+'testParams.csv')
 paramDF['angle'] = 90 - paramDF['angle']
 paramsPerBatch = 10
 df['Batch'] = df['Batch']-1
